@@ -11,10 +11,10 @@
 	</parent>
 
 	<groupId>com.devluan</groupId>
-	<artifactId>job-portal</artifactId>
+	<artifactId>proVagas</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>job-portal</name>
-	<description>Job Portal project for Spring Boot</description>
+	<name>proVagas</name>
+	<description></description>
 
 	<properties>
 		<java.version>21</java.version>

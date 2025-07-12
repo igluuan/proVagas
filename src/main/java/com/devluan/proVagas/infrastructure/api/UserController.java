@@ -1,14 +1,14 @@
 package com.devluan.proVagas.infrastructure.api;
 
 import com.devluan.proVagas.application.dto.user.request.UserRegisterRequest;
-import com.devluan.proVagas.application.dto.user.response.UserRegisterResponse;
 import com.devluan.proVagas.application.service.user.UserApplicationService;
 import com.devluan.proVagas.domain.user.model.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -17,16 +17,29 @@ import java.util.UUID;
 public class UserController {
     private final UserApplicationService userService;
 
-    public UserRegisterResponse register(UserRegisterRequest request) {
-        return userService.createUser(request);
+    
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable UUID userId) {
+        return userService.findUserById(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-    public Optional<User> getUserById(UUID userId) {
-        return userService.findUserById(userId);
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        var users = userService.findAllUsers();
+        return ResponseEntity.ok(users);
     }
-    public void updateUser(UUID userId, UserRegisterRequest request) {
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<Void> updateUser(@PathVariable UUID userId, @RequestBody UserRegisterRequest request) {
         userService.updateUser(userId, request);
+        return ResponseEntity.ok().build();
     }
-    public void deleteUser(UUID userId) {
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
         userService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
     }
 }
