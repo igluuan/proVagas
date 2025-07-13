@@ -42,9 +42,9 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
 
             // Rota candidatos
-            .requestMatchers(HttpMethod.PUT, "/api/users/**").hasRole("USER")
-            .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("USER")
-            .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("USER")
+            .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAuthority("ROLE_USER")
+            .requestMatchers(HttpMethod.GET, "/api/users/**").hasAuthority("ROLE_USER")
+            .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ROLE_USER")
 
             // Rota de administração
             .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -57,7 +57,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

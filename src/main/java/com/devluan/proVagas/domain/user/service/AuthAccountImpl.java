@@ -10,7 +10,11 @@ import com.devluan.proVagas.application.dto.user.response.UserRegisterResponse;
 import com.devluan.proVagas.application.service.user.AuthAccountService;
 import com.devluan.proVagas.domain.user.mapper.UserMapper;
 import com.devluan.proVagas.domain.user.model.User;
+import com.devluan.proVagas.domain.user.model.Role;
+
+import com.devluan.proVagas.domain.user.model.ApplicationRole;
 import com.devluan.proVagas.domain.user.repository.UserRepository;
+import com.devluan.proVagas.domain.user.service.RoleService;
 import com.devluan.proVagas.infrastructure.security.JwtProvider;
 
 import jakarta.transaction.Transactional;
@@ -26,6 +30,7 @@ public class AuthAccountImpl implements AuthAccountService{
     private final JwtProvider jwtProvider;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
     @Override
     public UserRegisterResponse createUser(UserRegisterRequest request) {
@@ -33,6 +38,8 @@ public class AuthAccountImpl implements AuthAccountService{
         logger.info("Criando novo usuário com email: {}", request.email());
         User newUser = userMapper.toEntity(request);
         encodeAndSetPassword(newUser, request.password());
+        Role userRole = roleService.getRole(ApplicationRole.USER);
+        newUser.getRoles().add(userRole);
         userRepository.save(newUser);
         logger.info("Usuário criado com sucesso: {}", newUser.getId());
         return userMapper.toResponse(newUser);

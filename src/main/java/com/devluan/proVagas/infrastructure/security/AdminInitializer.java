@@ -2,8 +2,8 @@ package com.devluan.proVagas.infrastructure.security;
 
 import com.devluan.proVagas.domain.user.model.Role;
 import com.devluan.proVagas.domain.user.model.User;
-import com.devluan.proVagas.domain.user.repository.RoleRepository;
 import com.devluan.proVagas.domain.user.repository.UserRepository;
+import com.devluan.proVagas.domain.user.service.RoleService;
 import com.devluan.proVagas.infrastructure.logging.LoggerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,8 +13,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
+import com.devluan.proVagas.domain.user.model.ApplicationRole;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
+import com.devluan.proVagas.domain.user.model.Role;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ import java.util.Set;
 public class AdminInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final LoggerService logger;
 
@@ -43,15 +46,12 @@ public class AdminInitializer implements ApplicationRunner {
         if (userRepository.findByEmail(adminEmail).isEmpty()) {
             logger.info("Criando usuário administrador inicial...");
 
-            Set<Role> roles = new HashSet<>();
-            for (String roleName : adminRoles.split(",")) {
-                Role role = roleRepository.findByName(roleName.trim())
-                        .orElseGet(() -> {
-                            logger.warn("Role '{}' não encontrada, criando-a.", roleName.trim());
-                            return roleRepository.save(new Role(null, roleName.trim()));
-                        });
-                roles.add(role);
-            }
+            Set<ApplicationRole> adminApplicationRoles = Arrays.stream(adminRoles.split(","))
+                    .map(String::trim)
+                    .map(ApplicationRole::valueOf)
+                    .collect(Collectors.toSet());
+
+            Set<Role> roles = roleService.getRoles(adminApplicationRoles);
 
             User adminUser = new User(
                     null,
