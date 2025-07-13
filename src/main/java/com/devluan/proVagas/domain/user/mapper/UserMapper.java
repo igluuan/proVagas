@@ -3,6 +3,9 @@ package com.devluan.proVagas.domain.user.mapper;
 import com.devluan.proVagas.application.dto.user.request.UserRegisterRequest;
 import com.devluan.proVagas.application.dto.user.response.UserRegisterResponse;
 import com.devluan.proVagas.domain.user.model.User;
+
+import java.util.HashSet;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +22,8 @@ public class UserMapper {
             request.email(),
             request.password(),
             null, 
-            true
+            true,
+            new HashSet<>()
         );
     }
 
