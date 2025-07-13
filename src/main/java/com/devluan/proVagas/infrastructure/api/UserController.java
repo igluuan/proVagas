@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserAccountService userService;
@@ -23,7 +23,7 @@ public class UserController {
 
 
     @PutMapping("/{userId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> updateUser(@PathVariable UUID userId, @RequestBody UserRegisterRequest request) {
         logger.info("Requisição de atualização recebida para o usuário com ID: {}", userId);
         userService.updateMyProfile(userId, request);
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
         logger.info("Requisição de exclusão recebida para o usuário com ID: {}", userId);
         userService.deleteMyAccount(userId);
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
     public ResponseEntity<User> getMyProfile(@AuthenticationPrincipal Jwt jwt){
         logger.info("Requisição de perfil recebida para o usuário com email: {}", jwt.getSubject());
         User user = userService.getMyProfile(jwt);

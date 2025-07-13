@@ -1,0 +1,77 @@
+TASK: INVESTIGAÇÃO E CORREÇÃO DE ACESSO A ROTAS PROTEGIDAS (403)
+
+===============================================================
+OBJETIVO PRINCIPAL
+Identificar e corrigir a causa raiz dos erros 403 em rotas protegidas por roles, realizando apenas os ajustes mínimos necessários sem modificar a lógica existente.
+
+===============================================================
+ESCOPO DE INVESTIGAÇÃO
+
+1. CLASSES A ANALISAR:
+   [ ] SecurityConfig.java - Configurações de segurança
+   [ ] User/Role entities - Estrutura de permissões
+   [ ] Controllers - Anotações de segurança (@PreAuthorize, @Secured)
+
+2. PONTOS CRÍTICOS A VERIFICAR:
+   - Mapeamento role/autorities (prefixo "ROLE_" presente)
+   - Hierarquia de configurações HTTP
+   - Consistência entre:
+     * Roles declaradas nas entidades
+     * Roles esperadas nas anotações
+
+===============================================================
+ETAPAS DE DIAGNÓSTICO
+
+1. TESTE DE AUTORIDADES (UserDetails)
+   - Verificar se:
+     hasAuthority("ROLE_ADMIN") 
+     matches with:
+     getAuthorities() do usuário logado
+
+2. LOGS DE DEBUG (Ativar temporariamente)
+   - Spring Security DEBUG mode:
+     logging.level.org.springframework.security=DEBUG
+
+3. VERIFICAÇÃO DE CONFLITOS:
+   - Ordem dos filtros de segurança
+   - CSRF habilitado/desabilitado
+   - CORS configurado corretamente
+
+===============================================================
+POSSÍVEIS CAUSAS (CHECKLIST)
+
+[ ] Prefixo "ROLE_" faltando nas authorities
+[ ] Configuração de acesso sobrescrita acidentalmente
+[ ] Cache de segurança com dados desatualizados
+[ ] Token JWT sem claims de role (se aplicável)
+
+===============================================================
+CRITÉRIOS PARA CORREÇÃO
+
+1. RESTRIÇÕES:
+   - NÃO adicionar novas dependências
+   - NÃO refatorar código funcional
+   - NÃO modificar contratos existentes
+
+2. AJUSTES PERMITIDOS:
+   - Correção de prefixos em roles
+   - Ajuste na ordem de configurações de segurança
+   - Fix em comparações de authorities
+   - Atualização de annotations (ex: @Secured→@PreAuthorize)
+
+===============================================================
+ENTREGÁVEIS
+
+1. RELATÓRIO DE CAUSA RAÍZ:
+   - Classe/linha onde foi identificado o problema
+   - Explicação técnica detalhada
+   - Evidências (logs, prints)
+
+2. PATCH CORRETIVO:
+   - Arquivos modificados (diff)
+   - Justificativa para cada alteração
+
+3. TESTES REALIZADOS:
+   - Casos de teste que reproduzem o 403
+   - Resultados pós-correção
+

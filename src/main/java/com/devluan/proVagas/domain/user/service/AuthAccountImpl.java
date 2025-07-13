@@ -14,7 +14,6 @@ import com.devluan.proVagas.domain.user.model.Role;
 
 import com.devluan.proVagas.domain.user.model.ApplicationRole;
 import com.devluan.proVagas.domain.user.repository.UserRepository;
-import com.devluan.proVagas.domain.user.service.RoleService;
 import com.devluan.proVagas.infrastructure.security.JwtProvider;
 
 import jakarta.transaction.Transactional;

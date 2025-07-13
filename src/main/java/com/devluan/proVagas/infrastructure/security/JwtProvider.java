@@ -27,7 +27,7 @@ public class JwtProvider {
         
         var scopes = user.getRoles()
         .stream()
-        .map(role -> "ROLE_" + role.getName())
+        .map(role -> role.getName())
         .filter(Objects::nonNull)
         .collect(Collectors.joining(" "));
 

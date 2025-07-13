@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import com.devluan.proVagas.domain.user.model.ApplicationRole;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -36,24 +37,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        .securityMatcher("/api/**")
-        .authorizeHttpRequests(auth -> auth
-            // Rota públicas API
-            .requestMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
+                .securityMatcher("/api/**")
+                .authorizeHttpRequests(auth -> auth
+                                // Rota públicas API
+                                .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                                // Rota de administração
+                                .requestMatchers("/api/admin/**").hasRole(ApplicationRole.ADMIN.name())
 
-            // Rota candidatos
-            .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAuthority("ROLE_USER")
-            .requestMatchers(HttpMethod.GET, "/api/users/**").hasAuthority("ROLE_USER")
-            .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ROLE_USER")
-
-            // Rota de administração
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
-            .anyRequest().authenticated()
-        )
-        .csrf().disable()
-        .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                                .anyRequest().authenticated()
+                )
+                .csrf(csrf -> csrf.disable())
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 
