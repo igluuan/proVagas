@@ -10,8 +10,8 @@ import com.devluan.proVagas.application.dto.user.request.LoginUserRequest;
 import com.devluan.proVagas.application.dto.user.request.UserRegisterRequest;
 import com.devluan.proVagas.application.dto.user.response.LoginUserResponse;
 import com.devluan.proVagas.application.dto.user.response.UserRegisterResponse;
-import com.devluan.proVagas.application.service.user.UserApplicationService;
-
+import com.devluan.proVagas.application.service.user.AuthAccountService;
+import com.devluan.proVagas.infrastructure.logging.LoggerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -19,19 +19,23 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserApplicationService userService;
-
+    private final AuthAccountService authApplicantionService;
+    private final LoggerService logger;
 
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponse> register(@RequestBody @Valid UserRegisterRequest request) {
-        var response = userService.createUser(request);
+        logger.info("Requisição de registro recebida para o email: {}", request.email());
+        var response = authApplicantionService.createUser(request);
+        logger.info("Registro bem-sucedido para o email: {}", request.email());
         return ResponseEntity.ok(response);
     }
 
     
     @PostMapping("/login")
     public ResponseEntity<LoginUserResponse> login(@RequestBody @Valid LoginUserRequest request) {
-        var response = userService.authenticateAccount(request);
+        logger.info("Requisição de login recebida para o email: {}", request.email());
+        var response = authApplicantionService.authenticateAccount(request);
+        logger.info("Login bem-sucedido para o email: {}", request.email());
         return ResponseEntity.ok(response);
     }
 }
