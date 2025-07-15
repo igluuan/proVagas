@@ -1,1 +1,1 @@
-refactor: use custom exceptions in services
+docs: add development workflow guidelines to gemini.md

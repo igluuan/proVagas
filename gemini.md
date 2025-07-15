@@ -21,6 +21,10 @@ O projeto segue uma arquitetura em camadas:
 - **`application`**: Contém a lógica de orquestração e os casos de uso. Define as interfaces dos serviços (`AuthAccountService`, `UserAccountService`) e os DTOs (Data Transfer Objects) para requisição e resposta.
 - **`domain`**: Representa o núcleo do negócio. Contém os modelos de domínio (`User`, `Role`), os repositórios (`UserRepository`) e as implementações da lógica de negócio (`AuthAccountImpl`, `UserAccountImpl`).
 
+## Fluxo de Trabalho de Desenvolvimento
+
+- **Branches:** Sempre crie uma nova branch para cada nova funcionalidade ou correção de bug.
+
 ## Endpoints da API
 
 ### Autenticação (`/auth`)
