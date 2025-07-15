@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.devluan.proVagas.domain.user.model.Role;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -27,7 +28,7 @@ public class JwtProvider {
         
         var scopes = user.getRoles()
         .stream()
-        .map(role -> role.getName())
+        .map(Role::getName)
         .filter(Objects::nonNull)
         .collect(Collectors.joining(" "));
 
