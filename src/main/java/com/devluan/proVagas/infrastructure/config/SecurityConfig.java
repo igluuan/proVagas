@@ -1,4 +1,4 @@
-package com.devluan.proVagas.config;
+package com.devluan.proVagas.infrastructure.config;
 
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;

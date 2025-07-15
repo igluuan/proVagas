@@ -1,77 +1,111 @@
-TASK: INVESTIGAÇÃO E CORREÇÃO DE ACESSO A ROTAS PROTEGIDAS (403)
+# Task: Centralização de Informações Sensíveis
 
-===============================================================
-OBJETIVO PRINCIPAL
-Identificar e corrigir a causa raiz dos erros 403 em rotas protegidas por roles, realizando apenas os ajustes mínimos necessários sem modificar a lógica existente.
+## Objetivo
+Analisar o projeto Spring Boot existente, identificar informações sensíveis e implementar mudanças
+**apenas onde necessário** para centralizá-las de forma segura.
 
-===============================================================
-ESCOPO DE INVESTIGAÇÃO
+## O que fazer
 
-1. CLASSES A ANALISAR:
-   [ ] SecurityConfig.java - Configurações de segurança
-   [ ] User/Role entities - Estrutura de permissões
-   [ ] Controllers - Anotações de segurança (@PreAuthorize, @Secured)
+### 1. Análise do Estado Atual
+- [ ] Escanear o projeto para encontrar informações sensíveis:
+  - Senhas e tokens hardcoded
+  - Chaves de API no código
+  - Strings de conexão de banco expostas
+  - URLs de APIs internas
+  - Certificados e chaves privadas
+  - Qualquer credencial no código fonte
 
-2. PONTOS CRÍTICOS A VERIFICAR:
-   - Mapeamento role/autorities (prefixo "ROLE_" presente)
-   - Hierarquia de configurações HTTP
-   - Consistência entre:
-     * Roles declaradas nas entidades
-     * Roles esperadas nas anotações
+- [ ] Mapear configurações existentes:
+  - Verificar arquivos `application*.properties` atuais
+  - Identificar se já usa profiles ou variáveis de ambiente
+  - Documentar estrutura atual de configuração
 
-===============================================================
-ETAPAS DE DIAGNÓSTICO
+- [ ] Classificar por prioridade:
+  - **Crítico**: Senhas, tokens, chaves privadas
+  - **Moderado**: URLs internas, configurações específicas
+  - **Baixo**: Configurações que podem ficar no código
 
-1. TESTE DE AUTORIDADES (UserDetails)
-   - Verificar se:
-     hasAuthority("ROLE_ADMIN") 
-     matches with:
-     getAuthorities() do usuário logado
+### 2. Avaliar Arquitetura de Configuração
+- [ ] Verificar se o projeto já usa profiles do Spring:
+  - Se **SIM**: Aproveitar estrutura existente
+  - Se **NÃO**: Criar apenas se necessário
 
-2. LOGS DE DEBUG (Ativar temporariamente)
-   - Spring Security DEBUG mode:
-     logging.level.org.springframework.security=DEBUG
+- [ ] Analisar arquivos properties existentes:
+  - Manter configurações não-sensíveis onde estão
+  - Identificar apenas o que precisa ser externalizado
+  - Não recriar arquivos desnecessariamente
 
-3. VERIFICAÇÃO DE CONFLITOS:
-   - Ordem dos filtros de segurança
-   - CSRF habilitado/desabilitado
-   - CORS configurado corretamente
+- [ ] Decidir estratégia baseada no encontrado:
+  - **Opção 1**: Usar variáveis de ambiente nos properties existentes
+  - **Opção 2**: Criar profiles apenas se houver múltiplos ambientes
+  - **Opção 3**: Manter configuração atual e externalizar só o sensível
 
-===============================================================
-POSSÍVEIS CAUSAS (CHECKLIST)
+### 3. Implementar Mudanças Mínimas
+- [ ] **Apenas** substituir informações sensíveis por variáveis de ambiente:
+  ```properties
+  # ANTES (se encontrado hardcoded)
+  spring.datasource.password=minhasenha123
+  
+  # DEPOIS (apenas se necessário)
+  spring.datasource.password=${DB_PASSWORD}
+  ```
 
-[ ] Prefixo "ROLE_" faltando nas authorities
-[ ] Configuração de acesso sobrescrita acidentalmente
-[ ] Cache de segurança com dados desatualizados
-[ ] Token JWT sem claims de role (se aplicável)
+- [ ] **Manter** configurações que não são sensíveis:
+  ```properties
+  # MANTER como está - não é sensível
+  server.port=8080
+  spring.jpa.hibernate.ddl-auto=validate
+  logging.level.com.empresa=INFO
+  ```
 
-===============================================================
-CRITÉRIOS PARA CORREÇÃO
+- [ ] **Só criar** novos arquivos properties se realmente necessário:
+  - Se há múltiplos ambientes → criar profiles específicos
+  - Se ambiente único → usar apenas variáveis no arquivo existente
 
-1. RESTRIÇÕES:
-   - NÃO adicionar novas dependências
-   - NÃO refatorar código funcional
-   - NÃO modificar contratos existentes
+### 4. Ajustar Código Java (Apenas se Necessário)
+- [ ] **Só modificar** classes que têm informações sensíveis hardcoded
+- [ ] **Manter** código que já usa `@Value` ou `@ConfigurationProperties`
+- [ ] **Adicionar** validação apenas onde crítico:
+  
+  ```java
+  // SE encontrar hardcoded no código:
+  // ANTES
+  String apiKey = "sk_live_abc123";
+  
+  // DEPOIS
+  @Value("${api.payment.key}")
+  private String apiKey;
+  ```
 
-2. AJUSTES PERMITIDOS:
-   - Correção de prefixos em roles
-   - Ajuste na ordem de configurações de segurança
-   - Fix em comparações de authorities
-   - Atualização de annotations (ex: @Secured→@PreAuthorize)
+- [ ] **Não alterar** código que já está bem configurado:
+  ```java
+  // JÁ ESTÁ BOM - não mexer
+  @Value("${server.port}")
+  private int serverPort;
+  ```
 
-===============================================================
-ENTREGÁVEIS
+### 5. Documentar Apenas as Mudanças
+- [ ] **Atualizar** documentação existente com as novas variáveis
+- [ ] **Criar** arquivo `VARIAVEIS_AMBIENTE.md` **apenas** com:
+  - Lista das variáveis de ambiente adicionadas
+  - Valores de exemplo (sem dados reais)
+  - Instruções de como configurar
 
-1. RELATÓRIO DE CAUSA RAÍZ:
-   - Classe/linha onde foi identificado o problema
-   - Explicação técnica detalhada
-   - Evidências (logs, prints)
+- [ ] **Só criar** arquivos `.example` se novos arquivos foram criados:
+  - `application-prod.properties.example` (se criou arquivo prod)
+  - Não criar se só modificou arquivos existentes
 
-2. PATCH CORRETIVO:
-   - Arquivos modificados (diff)
-   - Justificativa para cada alteração
+## Deliverables
+- [ ] **Relatório de análise** com informações sensíveis encontradas
+- [ ] **Código modificado** apenas onde necessário
+- [ ] **Arquivos properties** ajustados minimamente
+- [ ] **Documentação** das variáveis de ambiente adicionadas
+- [ ] **Plano de deploy** sem breaking changes
 
-3. TESTES REALIZADOS:
-   - Casos de teste que reproduzem o 403
-   - Resultados pós-correção
+## Critérios de Sucesso
+- ✅ **Zero breaking changes** - aplicação funciona igual
+- ✅ **Apenas informações sensíveis** removidas do código
+- ✅ **Configurações existentes** mantidas intactas
+- ✅ **Deploy transparente** - sem mudanças no processo atual
+- ✅ **Documentação mínima** mas suficiente
 

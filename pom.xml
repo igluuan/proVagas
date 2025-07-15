@@ -14,11 +14,10 @@
 	<artifactId>proVagas</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>proVagas</name>
-	<description></description>
+	<description>""</description>
 
 	<properties>
 		<java.version>21</java.version>
-		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<lombok.version>1.18.34</lombok.version>
 		<maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
 	</properties>
@@ -67,20 +66,6 @@
 			<groupId>com.github.ben-manes.caffeine</groupId>
 			<artifactId>caffeine</artifactId>
 		</dependency>
-
-		<!-- MapStruct -->
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>${mapstruct.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-processor</artifactId>
-			<version>${mapstruct.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
 		<!-- Runtime and Development Tools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -126,16 +111,13 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>${lombok.version}</version>
 						</path>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${mapstruct.version}</version>
-						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<plugin>

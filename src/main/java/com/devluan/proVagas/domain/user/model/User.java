@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.mapstruct.ap.shaded.freemarker.template.utility.NullArgumentException;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -41,7 +40,7 @@ public class User {
 
     public void changePassword(String newPassword){
         if(newPassword == null){
-            throw new NullArgumentException("a senha não pode ser nula.");
+            throw new NullPointerException("a senha não pode ser nula.");
         }
         this.password = newPassword;
     }
