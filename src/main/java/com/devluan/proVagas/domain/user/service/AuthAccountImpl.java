@@ -1,5 +1,8 @@
 package com.devluan.proVagas.domain.user.service;
 
+import com.devluan.proVagas.domain.user.exception.InvalidPasswordException;
+import com.devluan.proVagas.domain.user.exception.UserAlreadyExistsException;
+import com.devluan.proVagas.domain.user.exception.UserNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +38,9 @@ public class AuthAccountImpl implements AuthAccountService{
     public UserRegisterResponse createUser(UserRegisterRequest request) {
         validateUserRequest(request);
         logger.info("Criando novo usuário com email: {}", request.email());
+        userRepository.findByEmail(request.email()).ifPresent(user -> {
+            throw new UserAlreadyExistsException("Usuário com este email já existe.");
+        });
         User newUser = userMapper.toEntity(request);
         encodeAndSetPassword(newUser, request.password());
         Role userRole = roleService.getRole(ApplicationRole.USER);
@@ -52,10 +58,10 @@ public class AuthAccountImpl implements AuthAccountService{
         User user = findUserByEmail(request.email());
         verifyPassword(request.password(), user.getPassword());
         try {
-        
+
            String token = jwtProvider.generateToken(user);
            Long expiresIn = jwtProvider.getExpiresIn();
-            
+
            logger.info("Login realizado com sucesso para o usuário: {}", request.email());
            return new LoginUserResponse(token, expiresIn);
 
@@ -64,15 +70,15 @@ public class AuthAccountImpl implements AuthAccountService{
             throw new IllegalArgumentException("Erro ao processar a autenticação.");
         }
     }
-    
+
     private User findUserByEmail(String email){
         return userRepository.findByEmail(email)
-        .orElseThrow(() -> new IllegalArgumentException("usuário não encontrado."));
+        .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
     }
     private void verifyPassword(String requestPassword, String userPassword){
         if(!passwordEncoder.matches(requestPassword, userPassword)){
             logger.warn("Senha incorreta para o usuário: {}", "Senha inválida.");
-            throw new IllegalArgumentException("Senha incorreta.");
+            throw new InvalidPasswordException("Senha incorreta.");
         }
     }
     private void encodeAndSetPassword(User newUser, String password) {

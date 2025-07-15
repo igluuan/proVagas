@@ -2,6 +2,9 @@ package com.devluan.proVagas.infrastructure.api.exception;
 
 import com.devluan.proVagas.application.dto.error.ErrorResponse;
 import com.devluan.proVagas.application.dto.error.ValidationErrorResponse;
+import com.devluan.proVagas.domain.user.exception.InvalidPasswordException;
+import com.devluan.proVagas.domain.user.exception.UserAlreadyExistsException;
+import com.devluan.proVagas.domain.user.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,30 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorResponse err = new ErrorResponse(
                 Instant.now(), status.value(), "Illegal argument exception", e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> userNotFound(UserNotFoundException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ErrorResponse err = new ErrorResponse(
+                Instant.now(), status.value(), "User not found", e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> userAlreadyExists(UserAlreadyExistsException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        ErrorResponse err = new ErrorResponse(
+                Instant.now(), status.value(), "User already exists", e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ErrorResponse> invalidPassword(InvalidPasswordException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse err = new ErrorResponse(
+                Instant.now(), status.value(), "Invalid password", e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 

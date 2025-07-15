@@ -1,1 +1,1 @@
-feat: implement centralized exception handler
+refactor: use custom exceptions in services
