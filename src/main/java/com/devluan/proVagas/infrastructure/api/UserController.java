@@ -22,7 +22,7 @@ public class UserController {
 
 
     @PutMapping("/{userId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('SCOPE)USER')")
     public ResponseEntity<Void> updateUser(@PathVariable UUID userId, @RequestBody UserRegisterRequest request) {
         logger.info("Requisição de atualização recebida para o usuário com ID: {}", userId);
         userService.updateMyProfile(userId, request);
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('SCOPE_USER')")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
         logger.info("Requisição de exclusão recebida para o usuário com ID: {}", userId);
         userService.deleteMyAccount(userId);

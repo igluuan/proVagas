@@ -9,7 +9,7 @@
 - **Backend:** Java 21, Spring Boot 3.5.0
 - **Segurança:** Spring Security com OAuth2 Resource Server para autenticação baseada em token JWT.
 - **Banco de Dados:** PostgreSQL, com acesso via Spring Data JPA.
-- **Mapeamento de Objetos:** MapStruct para conversão entre DTOs e Entidades.
+- **Mapeamento de Objetos:** Use mapeamento manual.
 - **Build Tool:** Maven.
 - **Outras Ferramentas:** Lombok para redução de código boilerplate.
 
@@ -44,3 +44,28 @@ O projeto segue uma arquitetura em camadas:
   - **Autorização:** Requer `hasRole('USER')`.
 - **`DELETE /users/{userId}`**: Deleta a conta de um usuário.
   - **Autorização:** Requer `hasRole('USER')`.
+
+## Logout Implementation
+
+To provide a secure logout mechanism, we will implement a server-side token blocklist using the existing Caffeine cache. This will prevent the use of compromised tokens after a user has logged out.
+
+### Implementation Steps
+
+1.  **`TokenBlocklistService`**:
+    *   Create a new service to manage the token blocklist.
+    *   This service will use the Caffeine cache to store invalidated JWTs until they expire.
+    *   It will expose two methods:
+        *   `add(token)`: Adds a token to the blocklist.
+        *   `isBlocklisted(token)`: Checks if a token is in the blocklist.
+
+2.  **`/logout` Endpoint**:
+    *   Add a new `POST /auth/logout` endpoint to the `AuthController`.
+    *   This endpoint will:
+        *   Extract the JWT from the `Authorization` header.
+        *   Call the `TokenBlocklistService` to add the token to the blocklist.
+        *   Return a `200 OK` response.
+
+3.  **Authentication Filter**:
+    *   Modify the authentication process to check the token blocklist.
+    *   Before validating a JWT, the application will first check if the token is in the blocklist.
+    *   If the token is blocklisted, the request will be rejected with a `401 Unauthorized` error.

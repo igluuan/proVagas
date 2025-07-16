@@ -1,5 +1,7 @@
 package com.devluan.proVagas.infrastructure.api;
 
+import com.devluan.proVagas.application.service.user.TokenBlocklistService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final AuthAccountService authApplicantionService;
     private final LoggerService logger;
+    private final TokenBlocklistService tokenBlocklistService;
 
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponse> register(@RequestBody @Valid UserRegisterRequest request) {
@@ -30,12 +33,21 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    
     @PostMapping("/login")
     public ResponseEntity<LoginUserResponse> login(@RequestBody @Valid LoginUserRequest request) {
         logger.info("Requisição de login recebida para o email: {}", request.email());
         var response = authApplicantionService.authenticateAccount(request);
         logger.info("Login bem-sucedido para o email: {}", request.email());
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            var token = authHeader.substring(7);
+            tokenBlocklistService.add(token);
+        }
+        return ResponseEntity.ok().build();
     }
 }
