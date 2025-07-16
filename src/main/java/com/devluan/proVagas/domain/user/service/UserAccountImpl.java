@@ -1,8 +1,10 @@
 package com.devluan.proVagas.domain.user.service;
 
 import com.devluan.proVagas.application.dto.user.request.UserRegisterRequest;
+import com.devluan.proVagas.application.dto.user.response.MyProfileUserResponse;
 import com.devluan.proVagas.application.service.user.UserAccountService;
 import com.devluan.proVagas.domain.user.exception.UserNotFoundException;
+import com.devluan.proVagas.domain.user.mapper.UserMapper;
 import com.devluan.proVagas.domain.user.model.User;
 import com.devluan.proVagas.domain.user.repository.UserRepository;
 
@@ -22,6 +24,7 @@ public class UserAccountImpl implements UserAccountService {
 
     private final UserRepository userRepository;
     private final LoggerService logger;
+    private final UserMapper userMapper;
 
     @Override
     public void updateMyProfile(UUID userId, UserRegisterRequest request) {
@@ -84,7 +87,7 @@ public class UserAccountImpl implements UserAccountService {
     }
 
     @Override
-    public User getMyProfile(Jwt jwt) {
+    public MyProfileUserResponse getMyProfile(Jwt jwt) {
         if (jwt == null) {
             throw new IllegalArgumentException("Token não pode ser nulo");
         }
@@ -92,7 +95,9 @@ public class UserAccountImpl implements UserAccountService {
         if(email == null || email.isBlank()){
             throw new IllegalArgumentException("Token não pode ser nulo");
         }
-        return userRepository.findByEmail(email)
+        User existingUser = userRepository.findByEmail(email)
         .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
+        
+        return userMapper.MyprofileResponse(existingUser);
     }
 }

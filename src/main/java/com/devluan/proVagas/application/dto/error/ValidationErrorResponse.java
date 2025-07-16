@@ -2,7 +2,7 @@ package com.devluan.proVagas.application.dto.error;
 
 import lombok.Getter;
 
-import java.io.Serial;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 

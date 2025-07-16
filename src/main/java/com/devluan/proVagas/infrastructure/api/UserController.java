@@ -1,9 +1,8 @@
 package com.devluan.proVagas.infrastructure.api;
 
 import com.devluan.proVagas.application.dto.user.request.UserRegisterRequest;
+import com.devluan.proVagas.application.dto.user.response.MyProfileUserResponse;
 import com.devluan.proVagas.application.service.user.UserAccountService;
-import com.devluan.proVagas.domain.user.model.User;
-
 import com.devluan.proVagas.infrastructure.logging.LoggerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +41,9 @@ public class UserController {
 
     @GetMapping("/profile")
     @PreAuthorize("hasAuthority('SCOPE_USER')")
-    public ResponseEntity<User> getMyProfile(@AuthenticationPrincipal Jwt jwt){
+    public ResponseEntity<MyProfileUserResponse> getMyProfile(@AuthenticationPrincipal Jwt jwt){
         logger.info("Requisição de perfil recebida para o usuário com email: {}", jwt.getSubject());
-        User user = userService.getMyProfile(jwt);
+        MyProfileUserResponse user = userService.getMyProfile(jwt);
         logger.info("Perfil retornado com sucesso para o usuário com email: {}", jwt.getSubject());
         return ResponseEntity.ok(user);
     }

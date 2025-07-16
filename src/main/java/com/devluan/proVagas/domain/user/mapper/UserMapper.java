@@ -1,6 +1,7 @@
 package com.devluan.proVagas.domain.user.mapper;
 
 import com.devluan.proVagas.application.dto.user.request.UserRegisterRequest;
+import com.devluan.proVagas.application.dto.user.response.MyProfileUserResponse;
 import com.devluan.proVagas.application.dto.user.response.UserRegisterResponse;
 import com.devluan.proVagas.domain.user.model.User;
 
@@ -37,5 +38,19 @@ public class UserMapper {
             user.getName(),
             user.getEmail()
         );
+    }
+
+    public MyProfileUserResponse MyprofileResponse(User user){
+        if(user == null){
+            return null;
+        }
+
+        return new MyProfileUserResponse(
+                user.getName(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getRoles(),
+                true
+            );
     }
 }
