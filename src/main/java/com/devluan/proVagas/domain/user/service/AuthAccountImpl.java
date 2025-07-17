@@ -11,6 +11,7 @@ import com.devluan.proVagas.application.dto.user.request.UserRegisterRequest;
 import com.devluan.proVagas.application.dto.user.response.LoginUserResponse;
 import com.devluan.proVagas.application.dto.user.response.UserRegisterResponse;
 import com.devluan.proVagas.application.service.user.AuthAccountService;
+import com.devluan.proVagas.application.service.user.RoleService;
 import com.devluan.proVagas.domain.user.mapper.UserMapper;
 import com.devluan.proVagas.domain.user.model.User;
 import com.devluan.proVagas.domain.user.model.Role;

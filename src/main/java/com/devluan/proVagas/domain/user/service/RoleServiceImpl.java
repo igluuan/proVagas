@@ -1,5 +1,6 @@
 package com.devluan.proVagas.domain.user.service;
 
+import com.devluan.proVagas.application.service.user.RoleService;
 import com.devluan.proVagas.domain.user.model.ApplicationRole;
 import com.devluan.proVagas.domain.user.model.Role;
 import com.devluan.proVagas.domain.user.repository.RoleRepository;

@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devluan.proVagas.application.dto.user.request.LoginUserRequest;
 import com.devluan.proVagas.application.dto.user.request.UserRegisterRequest;
 import com.devluan.proVagas.application.dto.user.response.LoginUserResponse;
 import com.devluan.proVagas.application.dto.user.response.UserRegisterResponse;
+import com.devluan.proVagas.application.service.password.PasswordResetTokenService;
 import com.devluan.proVagas.application.service.user.AuthAccountService;
 import com.devluan.proVagas.infrastructure.logging.LoggerService;
 import jakarta.validation.Valid;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthAccountService authApplicantionService;
+    private final PasswordResetTokenService passwordResetTokenService;
     private final LoggerService logger;
     private final TokenBlocklistService tokenBlocklistService;
 
@@ -48,6 +51,18 @@ public class AuthController {
             var token = authHeader.substring(7);
             tokenBlocklistService.add(token);
         }
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> requestPasswordReset(@RequestParam String email) {
+        passwordResetTokenService.requestPasswordReset(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        passwordResetTokenService.resetPassword(token, newPassword);
         return ResponseEntity.ok().build();
     }
 }

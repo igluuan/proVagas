@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 // Rota públicas API
                                 .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/password/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
