@@ -35,9 +35,4 @@ public class PageController {
     public String register() {
         return "auth/register";
     }
-    
-    @GetMapping("/test-dashboard")
-    public String testDashboard() {
-        return "test-dashboard";
-    }
 }
