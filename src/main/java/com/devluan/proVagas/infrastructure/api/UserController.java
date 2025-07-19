@@ -22,7 +22,7 @@ public class UserController {
 
 
     @PutMapping("/{userId}")
-    @PreAuthorize("hasRole('SCOPE)USER')")
+    @PreAuthorize("hasRole('SCOPE_USER')")
     public ResponseEntity<Void> updateUser(@PathVariable UUID userId, @RequestBody UserRegisterRequest request) {
         logger.info("Requisição de atualização recebida para o usuário com ID: {}", userId);
         userService.updateMyProfile(userId, request);

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Teste do Dashboard</h1>
+        <div id="user-name">Usuário</div>
+        <div id="welcome-name">Usuário</div>
+        <button onclick="testLoadUserProfile()">Testar Carregamento</button>
+    </div>
+
+    <script>
+        // Simular token para teste
+        localStorage.setItem('jwt_token', 'eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJwcm9WYWdhcy1zZXJ2aWNlIiwic3ViIjoibWFyY29zQGV4YW1wbGUuY29tIiwiZXhwIjoxNzUyODk2ODk3LCJzY29wZSI6IlVTRVIifQ.YFCWpc8PuqHnfUsl6PiGRv7wllebrv_pbYRoG-U2O0hEwfPvHLYFsNjdboaHBbWJdcy_O2CvZxyIOjvA0CVk5l6DQHhVSYm13kBwnqvIkLn4WVUslqZkJx21S3O20C5ekeuZyxrqWz_HQDN6vnLbUY1nnvTUhOEGRwRF_nhL_N0zgOrKz5vK8I0OYNtm1D47v8bqx3mrOzFr_L3dzlMO5Rx0Dj4K3JlwhtgR-xjqgJ4Mfw-OsFuSYk-Lf-JUGfEieXlPt7lyjMwMu3QkNbBHuJHFnaArqS0Yyr6KcIxusFTeoOBNj8shxCzHkZ4LjICwA5_WPkiNOnFs24uZdXPDCg');
+
+        async function testLoadUserProfile() {
+            try {
+                const token = localStorage.getItem('jwt_token');
+                const response = await fetch('/api/users/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    document.getElementById('user-name').textContent = userData.name;
+                    document.getElementById('welcome-name').textContent = userData.name;
+                    console.log('Dados carregados:', userData);
+                } else {
+                    console.error('Erro:', response.status);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+    </script>
+</body>
+</html> 

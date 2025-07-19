@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - proVagas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
+</head>
+<body class="bg-light">
+    <!-- Navbar moderna -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/">proVagas</a>
+            <div class="d-flex align-items-center ms-auto">
+                <button class="btn btn-outline-light me-2" id="theme-toggle" title="Alternar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 200px);">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-5 col-lg-4 col-xl-3">
+                <div class="card shadow-lg border-0 rounded-4 auth-card">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <div class="auth-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h5 class="fw-bold mb-1">Criar conta</h5>
+                            <p class="text-muted small mb-0">Junte-se à nossa comunidade</p>
+                        </div>
+
+                        <form id="register-form">
+                            <div class="mb-3">
+                                <label for="name" class="form-label small fw-semibold text-muted">
+                                    <i class="fas fa-user me-1"></i>Nome completo
+                                </label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Seu nome completo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label small fw-semibold text-muted">
+                                    <i class="fas fa-envelope me-1"></i>Email
+                                </label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="seu@email.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label small fw-semibold text-muted">
+                                    <i class="fas fa-lock me-1"></i>Senha
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="toggle-password" title="Mostrar/ocultar senha">
+                                        <i class="fas fa-eye" id="password-icon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="register-error" class="alert alert-danger py-2 mb-3" style="display: none; font-size: 0.875rem;">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                <span id="error-message">Erro no registro</span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 mb-3 py-2">
+                                <i class="fas fa-user-plus me-2"></i>Criar conta
+                            </button>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center bg-light border-0 pt-0">
+                        <p class="mb-0 small">Já tem uma conta? 
+                            <a th:href="@{/login}" class="text-decoration-none fw-bold">Faça login</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer bg-dark text-white py-3 mt-auto">
+        <div class="container text-center">
+            <span class="small">&copy; 2025 proVagas. Todos os direitos reservados.</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/auth.js}"></script>
+    <script th:src="@{/js/theme.js}"></script>
+    <script th:src="@{/js/password-toggle.js}"></script>
+</body>
+</html>

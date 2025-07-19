@@ -1,1 +1,0 @@
-docs: add development workflow guidelines to gemini.md

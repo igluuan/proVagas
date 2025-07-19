@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - proVagas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">proVagas</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/dashboard}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Vagas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Candidaturas</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center ms-auto">
+                    <button class="btn btn-outline-light me-2" id="theme-toggle" title="Alternar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                            <img src="https://ui-avatars.com/api/?name=U&background=6a11cb&color=fff" alt="Avatar" width="32" height="32" class="avatar me-2" id="user-avatar">
+                            <span id="user-name">Usuário</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
+                                <i class="fas fa-user me-2"></i>Meu Perfil
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" id="logout-btn">
+                                <i class="fas fa-sign-out-alt me-2"></i>Sair
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5">
+        <!-- Welcome Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card bg-gradient-primary text-white">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <h1 class="display-6 fw-bold mb-3">
+                                    <i class="fas fa-home me-3"></i>Bem-vindo, <span id="welcome-name">Usuário</span>!
+                                </h1>
+                                <p class="lead mb-4">Estamos felizes em tê-lo de volta. Explore as melhores oportunidades de trabalho em tecnologia.</p>
+                            </div>
+                            <div class="col-lg-4 text-center">
+                                <div class="bg-white bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                                    <i class="fas fa-user-circle text-white" style="font-size: 3rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="bg-gradient-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-search text-white"></i>
+                        </div>
+                        <h5 class="card-title">Vagas Disponíveis</h5>
+                        <p class="card-text display-6 fw-bold text-primary">150+</p>
+                        <p class="card-text">Oportunidades em tecnologia</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="bg-gradient-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-paper-plane text-white"></i>
+                        </div>
+                        <h5 class="card-title">Minhas Candidaturas</h5>
+                        <p class="card-text display-6 fw-bold text-secondary">0</p>
+                        <p class="card-text">Candidaturas enviadas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="bg-gradient-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-eye text-white"></i>
+                        </div>
+                        <h5 class="card-title">Visualizações</h5>
+                        <p class="card-text display-6 fw-bold text-primary">0</p>
+                        <p class="card-text">Perfil visualizado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-clock me-2"></i>Atividades Recentes
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">Nenhuma atividade recente</p>
+                            <p class="text-muted">Comece a explorar vagas para ver suas atividades aqui</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-lightbulb me-2"></i>Dicas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-start mb-3">
+                            <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                            <div>
+                                <h6 class="mb-1">Complete seu perfil</h6>
+                                <small class="text-muted">Adicione informações profissionais para se destacar</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start mb-3">
+                            <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                            <div>
+                                <h6 class="mb-1">Explore vagas</h6>
+                                <small class="text-muted">Encontre oportunidades que combinam com você</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                            <div>
+                                <h6 class="mb-1">Mantenha-se atualizado</h6>
+                                <small class="text-muted">Receba notificações de novas vagas</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Profile Modal -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileModalLabel">
+                        <i class="fas fa-user me-2"></i>Meu Perfil
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs mb-3" id="profileTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="dados-tab" data-bs-toggle="tab" data-bs-target="#dados" type="button" role="tab">Dados</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="seguranca-tab" data-bs-toggle="tab" data-bs-target="#seguranca" type="button" role="tab">Segurança</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="profileTabContent">
+                        <div class="tab-pane fade show active" id="dados" role="tabpanel">
+                            <div id="profile-loading" class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Carregando...</span>
+                                </div>
+                                <p class="mt-2">Carregando informações do perfil...</p>
+                            </div>
+                            <div id="profile-content" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <div class="bg-gradient-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                                            <i class="fas fa-user-circle text-white" style="font-size: 3rem;"></i>
+                                        </div>
+                                        <h5 id="profile-name" class="mb-2">Nome do Usuário</h5>
+                                        <p id="profile-email" class="text-muted">email@exemplo.com</p>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <label class="form-label fw-bold">Nome Completo</label>
+                                                <p id="profile-full-name" class="form-control-plaintext">Nome do Usuário</p>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label fw-bold">Email</label>
+                                                <p id="profile-email-display" class="form-control-plaintext">email@exemplo.com</p>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label fw-bold">Data de Registro</label>
+                                                <p id="profile-created-at" class="form-control-plaintext">01/01/2025</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="profile-error" class="alert alert-danger" style="display: none;">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <span id="profile-error-message">Erro ao carregar perfil</span>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="seguranca" role="tabpanel">
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-lock me-2"></i>Funcionalidade de segurança em breve!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="edit-profile-btn">
+                        <i class="fas fa-edit me-2"></i>Editar Perfil
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark text-white mt-auto py-3">
+        <div class="container text-center">
+            <span>&copy; 2025 proVagas. Todos os direitos reservados.</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/theme.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
