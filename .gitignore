@@ -31,7 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/application.properties
+
+### Environment and Security Files ###
+.env
 docker/.env
-src/main/resources/app.key
-src/main/resources/app.pub
+src/main/resources/certs/app.key
+src/main/resources/certs/app.pub

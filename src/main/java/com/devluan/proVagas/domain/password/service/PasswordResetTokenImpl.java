@@ -31,7 +31,7 @@ public class PasswordResetTokenImpl implements PasswordResetTokenService{
     @Override
     public void requestPasswordReset(String email) {
         if(email == null){
-            new NullPointerException("Email não pode ser nulo.");
+            throw new NullPointerException("Email não pode ser nulo.");
         }
         User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
@@ -48,7 +48,8 @@ public class PasswordResetTokenImpl implements PasswordResetTokenService{
         
         tokenRepository.save(resetToken);
 
-        String resetLink = "http://localhost:8080/reset-password?token=" + token;
+        String baseUrl = System.getProperty("app.base-url", "http://localhost:8080");
+        String resetLink = baseUrl + "/reset-password?token=" + token;
         String emailBody = "Para redefinir sua senha, clique no link: " + resetLink;
         emailService.sendEmail(user.getEmail(), "Redefinição de Senha", emailBody);
     }

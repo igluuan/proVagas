@@ -1,0 +1,52 @@
+# Docker Compose override for development
+# This file is automatically loaded by docker-compose and extends the base configuration
+
+version: '3.8'
+
+services:
+  postgres:
+    environment:
+      # Development specific settings
+      POSTGRES_DB: vagas_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      # Development: enable logging and performance monitoring
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf:ro
+
+  pgadmin:
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@provagas.dev
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+
+  # Enable application service for development
+  app:
+    build: 
+      context: ..
+      dockerfile: Dockerfile
+    container_name: spring_app_dev
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=vagas_db
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres123
+      - MAIL_HOST=sandbox.smtp.mailtrap.io
+      - MAIL_PORT=587
+      - MAIL_USERNAME=your_username
+      - MAIL_PASSWORD=your_password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    volumes:
+      # Development: enable hot reload
+      - ../target:/app/target
